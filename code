@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Image Capture</title>
+</head>
+
+<body>
+    <!-- This video element will show the camera stream -->
+    <video id="cameraStream" autoplay></video>
+    
+    <!-- This button will be used to capture an image from the camera -->
+    <button id="captureButton">Capture Image</button>
+    
+    <!-- This canvas will help us take a snapshot of the camera stream -->
+    <canvas id="imageCanvas" style="display: none;"></canvas>
+    
+    <!-- This image will show the captured image -->
+    <img id="capturedImage" alt="Captured Image">
+    <script>// Get references to different elements in our HTML
+        const cameraStream = document.getElementById("cameraStream"); // The video element
+        const captureButton = document.getElementById("captureButton"); // The button
+        const imageCanvas = document.getElementById("imageCanvas"); // The canvas for image manipulation
+        const capturedImage = document.getElementById("capturedImage"); // The image element
+        
+        // Get access to the camera and display the video stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                cameraStream.srcObject = stream;
+            })
+            .catch(error => {
+                console.error("Error accessing camera:", error);
+            });
+        
+        // When the "Capture Image" button is clicked
+        captureButton.addEventListener("click", () => {
+            // Set the canvas size to match the video stream size
+            imageCanvas.width = cameraStream.videoWidth;
+            imageCanvas.height = cameraStream.videoHeight;
+            
+            // Draw the current camera frame onto the canvas
+            imageCanvas.getContext("2d").drawImage(cameraStream, 0, 0, imageCanvas.width, imageCanvas.height);
+        
+            // Show the captured image
+            capturedImage.src = imageCanvas.toDataURL("image/png"); // Convert canvas to an image
+            capturedImage.style.display = "block"; // Display the image
+        });
+        </script>
+</html>
+\
